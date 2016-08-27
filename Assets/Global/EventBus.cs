@@ -5,11 +5,11 @@ using UnityEngine.Events;
 
 public class EventBus : MonoBehaviour {
 
-	static event Action<Card> OnCardClickedEvent;
+	public static event Action<Card> OnCardClickedEvent;
 
 	// Use this for initialization
 	void Start () {
-		OnCardClickedEvent += OnCardClicked;
+
 	}
 	
 	// Update is called once per frame
@@ -18,7 +18,9 @@ public class EventBus : MonoBehaviour {
 	}
 
 	public static void OnCardClicked (Card card) {
-		Debug.Log ("HELLO");
+		if (OnCardClickedEvent != null) {
+			OnCardClickedEvent.Invoke (card);
+		}
 	}
 
 
