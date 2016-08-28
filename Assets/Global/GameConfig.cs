@@ -16,4 +16,5 @@ public class GameConfig : MonoBehaviour {
 	public int deckHalfSize = 12;
 	public int actionsLimit = 3;
 	public Color selectedCardColor;
+	public GameObject canonball;
 }

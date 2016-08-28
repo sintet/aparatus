@@ -1,0 +1,5 @@
+-Attack/Defence
+-Add hp
+-Add shooting
+-Remove cards from deck
+-Card Enqueue Ordering
