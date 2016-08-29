@@ -9,6 +9,8 @@ public class MatchController : MonoBehaviour {
 	public CardHand[] playerHands;
 	public PlayerActor[] playerActors;
 
+	public int attackingPlayer = 1; 
+
 	Queue<Card> cardsQueue = new Queue<Card> ();
 
 	enum MatchPhase {
@@ -17,6 +19,16 @@ public class MatchController : MonoBehaviour {
 	}
 		
 	MatchPhase matchPhase;
+
+	static MatchController instance;
+
+	void Awake() {
+		instance = this;
+	}
+
+	public static MatchController Instance {
+		get { return instance; }
+	}
 
 	void OnEnable() {
 		EventBus.OnCardClickedEvent += OnCardClickedEvent;
@@ -34,7 +46,13 @@ public class MatchController : MonoBehaviour {
 		for (int i = 0; i < 2; i++) {
 			playerHands[i].ClearCards ();
 
-			var cards = playerDecks [i].GetRandomCards (5);
+			List<Card> cards = new List<Card>(playerDecks [i].GetDefaultCards());
+
+			var specialCards = playerDecks [i].GetRandomCards (2);
+
+			cards.AddRange (specialCards);
+
+			Shuffle (cards);
 
 			foreach (Card c in cards) {
 				Card createdCard = GameObject.Instantiate<Card> (c);
@@ -67,8 +85,13 @@ public class MatchController : MonoBehaviour {
 
 		for (int i = 0; i < GameConfig.Instance.actionsLimit; i++) {
 			// Attack/Defence
-			cardsQueue.Enqueue(selectedCards0[i]);
-			cardsQueue.Enqueue(selectedCards1[i]);
+			if (attackingPlayer == 0) {
+				cardsQueue.Enqueue (selectedCards0 [i]);
+				cardsQueue.Enqueue (selectedCards1 [i]);
+			} else if (attackingPlayer == 1) {
+				cardsQueue.Enqueue (selectedCards1 [i]);
+				cardsQueue.Enqueue (selectedCards0 [i]);
+			}
 		}
 
 		StartCoroutine (ApplyActionsQueued());
@@ -81,6 +104,65 @@ public class MatchController : MonoBehaviour {
 			yield return c.ApplyActionsRoutine (playerActors [hand.playerIndex], playerActors [1 - hand.playerIndex]);
 		}
 
+		CheckWinCondition ();
+
 		DealCards ();
+
+		attackingPlayer = 1 - attackingPlayer;
+	}
+
+	void CheckWinCondition ()
+	{
+		int c = 0;
+		int winner = -1;
+
+		foreach (var p in playerActors) {
+			if (p.health <= 0) {
+				winner = p.playerIndex;
+				c++;
+			}
+		}
+
+		if (c >= 2) {
+			FinishGameWithDraw ();
+		} else {
+			FinishGameWithWinner (winner);
+		}
+	}
+
+	[ContextMenu("Draw!")]
+	void FinishGameWithDraw ()
+	{
+		for (int i = 0; i < 2; i++) {
+			playerHands [i].ClearCards ();
+		}
+		FindObjectOfType<MatchControllerUI> ().ShowEndScreen (-1);
+	}
+
+	[ContextMenu("Winner0")]
+	void TestWinner1() {
+		FinishGameWithWinner (0);
+	}
+
+	void FinishGameWithWinner (int winner)
+	{
+		for (int i = 0; i < 2; i++) {
+			playerHands [i].ClearCards ();
+		}
+		FindObjectOfType<MatchControllerUI> ().ShowEndScreen (winner);
+	}
+
+	public void Shuffle(List<Card> list)  
+	{  
+		System.Random rng = new System.Random ();
+
+		int n = list.Count;
+		while (n > 1) {  
+			n--;  
+			int k = rng.Next(n + 1);
+			Card value = list[k];  
+			list[k] = list[n];  
+			list[n] = value;  
+		}
 	}
 }

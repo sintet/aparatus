@@ -5,7 +5,6 @@ using System.Linq;
 
 public class CardContainer : MonoBehaviour {
 
-
 	public int SelectedCardsCount {
 		get { return GetComponentsInChildren<Card> ().Count ((x) => {
 				return x.Selected == true;
@@ -16,6 +15,11 @@ public class CardContainer : MonoBehaviour {
 		get { return GetComponentsInChildren<Card> ().Where ((x) => {
 			return x.Selected == true;
 		}).ToArray(); }
+	}
+
+	public Card[] GetDefaultCards ()
+	{
+		return GetComponentsInChildren<Card> ();
 	}
 
 	public int CardsCount {

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Battleground : MonoBehaviour {
 
-	public Vector3 GetLanePosition(int playerIndex, Lane lane) {
+	public Vector3 GetLanePosition(int playerIndex, int lane) {
 		return transform.Find(string.Format("Player{0}Lanes/{1}", playerIndex, lane.ToString())).position;
 	}
 }

@@ -2,9 +2,11 @@
 using System.Collections;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class Card : MonoBehaviour {
 	[SerializeField]
 	bool selected = false;
+	public string title = "Untitled Card"; 
 
 	public CardAction[] actions;
 
@@ -45,6 +47,13 @@ public class Card : MonoBehaviour {
 			}
 
 			GameObject.Destroy (createdAction.gameObject);
+		}
+	}
+
+	void Update() {
+		if (Application.isEditor && Application.isPlaying == false) {
+			transform.Find ("Header/Text").GetComponent<Text> ().text = title;
+			gameObject.name = title;
 		}
 	}
 }
