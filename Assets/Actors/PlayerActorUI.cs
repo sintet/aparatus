@@ -19,4 +19,5 @@ public class PlayerActorUI : MonoBehaviour {
 		slider.value = playerActor.health;
 		attackIndicator.SetActive(MatchController.Instance.attackingPlayer == playerActor.playerIndex);
 	}
+
 }

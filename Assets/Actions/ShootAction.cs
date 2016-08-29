@@ -25,7 +25,7 @@ public class ShootAction : CardAction {
 			Canonball canonball = GameObject.Instantiate (GameConfig.Instance.canonball).GetComponent<Canonball>();
 			canonball.owner = owner;
 			canonball.parentAction = this;
-			canonball.transform.position = owner.transform.position;
+			canonball.transform.position = owner.GetFirePoint();
 			canonball.transform.DOMove (location, projectileFlyDuration).SetEase(projectileFlyEase).OnComplete(() => {
 				Destroy(canonball.gameObject);
 				done = true; 

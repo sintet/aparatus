@@ -14,4 +14,8 @@ public class PlayerActor : MonoBehaviour {
 	public void DealDamage(int amount) {
 		health -= amount;
 	}
+
+	public Vector3 GetFirePoint() {
+		return transform.Find("Weapon").position;
+	}
 }

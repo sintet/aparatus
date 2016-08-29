@@ -125,7 +125,7 @@ public class MatchController : MonoBehaviour {
 
 		if (c >= 2) {
 			FinishGameWithDraw ();
-		} else {
+		} else if (c == 1) {
 			FinishGameWithWinner (winner);
 		}
 	}
@@ -158,7 +158,7 @@ public class MatchController : MonoBehaviour {
 
 		int n = list.Count;
 		while (n > 1) {  
-			n--;  
+			n--;
 			int k = rng.Next(n + 1);
 			Card value = list[k];  
 			list[k] = list[n];  
